@@ -41,15 +41,17 @@ function initNav() {
 
   btn.addEventListener('click', () => {
     const isOpen = navList.classList.toggle('is-open');
+    btn.classList.toggle('is-open', isOpen);
     btn.setAttribute('aria-expanded', isOpen);
     btn.setAttribute('aria-label', isOpen ? 'Cerrar menú' : 'Abrir menú');
   });
 
-  // Cerrar menú al hacer click en un enlace
   navList.querySelectorAll('a').forEach((link) => {
     link.addEventListener('click', () => {
       navList.classList.remove('is-open');
+      btn.classList.remove('is-open');
       btn.setAttribute('aria-expanded', 'false');
+      btn.setAttribute('aria-label', 'Abrir menú');
     });
   });
 }
@@ -106,11 +108,27 @@ function initOrderForm() {
   const form = document.getElementById('order-form');
   form.addEventListener('submit', handleOrderSubmit);
 
-  // Fijar fecha mínima de entrega (mañana)
+  // Fecha mínima de entrega (mañana)
   const deliveryInput = document.getElementById('delivery-date');
   const tomorrow = new Date();
   tomorrow.setDate(tomorrow.getDate() + 1);
   deliveryInput.min = tomorrow.toISOString().split('T')[0];
+
+  // Botones +/− de cantidad
+  const qtyInput = document.getElementById('quantity');
+  document.getElementById('qty-minus').addEventListener('click', () => {
+    const val = Number(qtyInput.value);
+    if (val > 1) qtyInput.value = val - 1;
+    document.getElementById('qty-minus').disabled = Number(qtyInput.value) <= 1;
+    document.getElementById('qty-plus').disabled  = Number(qtyInput.value) >= 5;
+  });
+  document.getElementById('qty-plus').addEventListener('click', () => {
+    const val = Number(qtyInput.value);
+    if (val < 5) qtyInput.value = val + 1;
+    document.getElementById('qty-minus').disabled = Number(qtyInput.value) <= 1;
+    document.getElementById('qty-plus').disabled  = Number(qtyInput.value) >= 5;
+  });
+  document.getElementById('qty-minus').disabled = true;
 }
 
 async function handleOrderSubmit(e) {

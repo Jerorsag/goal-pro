@@ -132,17 +132,36 @@ export function setButtonReady(btn) {
 // ---------------------------------------------------------------------------
 
 export function showOrderSuccess(order) {
-  const el = document.getElementById('order-success');
-  el.innerHTML = `
-    <strong>¡Pedido confirmado!</strong>
-    Tu pedido <strong>${order.id}</strong> —
-    <strong>${order.product}</strong>, talla <strong>${order.shoeSize}</strong>,
-    terreno <strong>${order.surface}</strong> —
-    por <strong>${formatPrice(order.total)}</strong>
-    fue registrado correctamente. Te contactaremos al correo que proporcionaste.
-  `;
-  showElement(el);
   hideElement(document.getElementById('order-error'));
+  showSuccessModal(order);
+}
+
+const SURFACE_LABELS = { FG: 'Césped natural (FG)', AG: 'Césped artificial (AG)', TF: 'Turf / Sintético (TF)', IC: 'Indoor / Cubierta (IC)' };
+
+export function showSuccessModal(order) {
+  const modal = document.getElementById('success-modal');
+  const closeBtn = document.getElementById('success-modal-close');
+
+  document.getElementById('success-order-id').textContent = order.id;
+  document.getElementById('success-order-product').textContent = order.product;
+  document.getElementById('success-order-size').textContent = `Talla ${order.shoeSize}`;
+  document.getElementById('success-order-surface').textContent = SURFACE_LABELS[order.surface] ?? order.surface;
+  document.getElementById('success-order-quantity').textContent = `${order.quantity} par${Number(order.quantity) > 1 ? 'es' : ''}`;
+  document.getElementById('success-order-total').textContent = formatPrice(order.total);
+
+  const deliveryDate = new Date(order.estimatedDelivery + 'T12:00:00');
+  document.getElementById('success-order-delivery').textContent = deliveryDate.toLocaleDateString('es-CO', {
+    weekday: 'long', day: 'numeric', month: 'long', year: 'numeric',
+  });
+
+  modal.showModal();
+
+  const onClose = () => {
+    modal.close();
+    closeBtn.removeEventListener('click', onClose);
+    document.getElementById('comprar').scrollIntoView({ behavior: 'smooth' });
+  };
+  closeBtn.addEventListener('click', onClose);
 }
 
 export function showOrderError(message) {
@@ -190,13 +209,28 @@ export function clearFieldErrors() {
  * @param {string} message  Texto descriptivo de la acción a confirmar.
  * @returns {Promise<boolean>}
  */
-export function showConfirmModal(message) {
+export function showConfirmModal(message, product = null, quantity = 1) {
   const modal = document.getElementById('confirm-modal');
   const desc = document.getElementById('modal-desc');
   const btnConfirm = document.getElementById('modal-confirm');
   const btnCancel = document.getElementById('modal-cancel');
+  const productDetail = document.getElementById('modal-product-detail');
 
   desc.textContent = message;
+
+  if (product) {
+    document.getElementById('modal-product-img').src = product.image;
+    document.getElementById('modal-product-img').alt = product.name;
+    document.getElementById('modal-product-name').textContent = product.name;
+    document.getElementById('modal-product-brand').textContent = product.brand;
+    document.getElementById('modal-product-price').textContent = formatPrice(product.price);
+    document.getElementById('modal-product-total').textContent = formatPrice(product.price * Number(quantity));
+    document.getElementById('modal-product-terrain').textContent = product.terrain.join(', ');
+    productDetail.removeAttribute('hidden');
+  } else {
+    productDetail.setAttribute('hidden', '');
+  }
+
   modal.showModal();
 
   return new Promise((resolve) => {

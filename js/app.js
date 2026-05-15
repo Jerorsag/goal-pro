@@ -154,8 +154,11 @@ async function handleOrderSubmit(e) {
   if (!validateOrderForm(data)) return;
 
   // Confirmación antes de enviar (acción con consecuencias)
+  const selectedProduct = productsCache.find((p) => p.id === Number(data.productId));
   const confirmed = await showConfirmModal(
-    `¿Confirmas el pedido de ${data.quantity} par(es) en talla ${data.shoeSize} para terreno ${data.surface}?`
+    `¿Confirmas el pedido de ${data.quantity} par(es) en talla ${data.shoeSize} para terreno ${data.surface}?`,
+    selectedProduct,
+    data.quantity
   );
   if (!confirmed) return;
 

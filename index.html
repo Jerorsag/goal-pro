@@ -328,11 +328,76 @@
     </div>
   </footer>
 
+  <!-- ===== MODAL DE ÉXITO ===== -->
+  <dialog id="success-modal" class="modal modal-success" aria-labelledby="success-modal-title">
+    <article class="modal-content success-modal-content">
+      <div class="success-modal-icon" aria-hidden="true">✅</div>
+      <h3 id="success-modal-title" class="success-modal-title">¡Pedido registrado con éxito!</h3>
+      <p class="success-modal-subtitle">Tu pedido fue confirmado correctamente. Aquí están todos los detalles:</p>
+
+      <dl class="success-order-details">
+        <div class="success-detail-row">
+          <dt>N.° de pedido</dt>
+          <dd id="success-order-id" class="success-order-id-value"></dd>
+        </div>
+        <div class="success-detail-row">
+          <dt>Modelo</dt>
+          <dd id="success-order-product"></dd>
+        </div>
+        <div class="success-detail-row">
+          <dt>Talla</dt>
+          <dd id="success-order-size"></dd>
+        </div>
+        <div class="success-detail-row">
+          <dt>Terreno</dt>
+          <dd id="success-order-surface"></dd>
+        </div>
+        <div class="success-detail-row">
+          <dt>Cantidad</dt>
+          <dd id="success-order-quantity"></dd>
+        </div>
+        <div class="success-detail-row success-detail-total">
+          <dt>Total pagado</dt>
+          <dd id="success-order-total"></dd>
+        </div>
+        <div class="success-detail-row">
+          <dt>Entrega estimada</dt>
+          <dd id="success-order-delivery"></dd>
+        </div>
+      </dl>
+
+      <p class="success-modal-note">
+        Te contactaremos al correo que proporcionaste para coordinar la entrega. ¡Gracias por confiar en GoalPro!
+      </p>
+
+      <div class="modal-actions" style="justify-content: center;">
+        <button id="success-modal-close" class="btn btn-primary btn-lg">Entendido, ¡a jugar!</button>
+      </div>
+    </article>
+  </dialog>
+
   <!-- ===== MODAL DE CONFIRMACIÓN ===== -->
   <dialog id="confirm-modal" class="modal" aria-labelledby="modal-title" aria-describedby="modal-desc">
     <article class="modal-content">
       <h3 id="modal-title">Confirmar pedido</h3>
       <p id="modal-desc"></p>
+
+      <!-- Detalle del producto seleccionado -->
+      <div id="modal-product-detail" hidden>
+        <div class="modal-product-card">
+          <img id="modal-product-img" class="modal-product-img" src="" alt="" />
+          <div class="modal-product-info">
+            <p id="modal-product-name" class="modal-product-name"></p>
+            <p id="modal-product-brand" class="modal-product-brand"></p>
+            <ul class="modal-product-meta">
+              <li><span>Precio por par:</span> <strong id="modal-product-price"></strong></li>
+              <li><span>Total del pedido:</span> <strong id="modal-product-total" class="modal-product-total"></strong></li>
+              <li><span>Terrenos:</span> <strong id="modal-product-terrain"></strong></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
       <div class="modal-actions">
         <button id="modal-cancel" class="btn btn-secondary">Cancelar</button>
         <button id="modal-confirm" class="btn btn-primary">Sí, confirmar pedido</button>
